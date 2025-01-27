@@ -1,0 +1,35 @@
+CREATE TABLE `messages` (
+   `message_id` int NOT NULL AUTO_INCREMENT,
+   `sender_id` int DEFAULT NULL,
+   `receiver_id` int DEFAULT NULL,
+   `content` text NOT NULL,
+   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`message_id`),
+   KEY `sender_id` (`sender_id`),
+   KEY `receiver_id` (`receiver_id`),
+   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`),
+   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`user_id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+CREATE TABLE `users` (
+   `user_id` int NOT NULL AUTO_INCREMENT,
+   `username` varchar(50) NOT NULL,
+   `password` varchar(255) NOT NULL,
+   `email` varchar(100) DEFAULT NULL,
+   `active` tinyint(1) DEFAULT '0',
+   PRIMARY KEY (`user_id`),
+   UNIQUE KEY `username` (`username`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+CREATE TABLE `friends` (
+   `user_id` int NOT NULL,
+   `friend_id` int NOT NULL,
+   `status` enum('pending','accepted','blocked') DEFAULT 'pending',
+   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`user_id`,`friend_id`),
+   KEY `friend_id` (`friend_id`),
+   CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+   CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
